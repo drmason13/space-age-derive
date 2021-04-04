@@ -12,7 +12,17 @@ pub fn derive_planet(input: TokenStream) -> TokenStream {
     let attr = input.attrs.iter().filter(|attr| attr.path.is_ident("orbital_period")).next().unwrap();
 
     // Parse the argument to the attribute as a float
-    let orbital_period: LitFloat = attr.parse_args().unwrap();
+    // let orbital_period: LitFloat = attr.parse_args().unwrap();
+    let orbital_period: LitFloat = match attr.parse_meta().unwrap() {
+        syn::Meta::NameValue(name_value) => {
+            if let syn::Lit::Float(x) = name_value.lit {
+                x
+            } else {
+                panic!("expected a float value, e.g. #[orbital_period = 1.0]")
+            }
+        },
+        _ => panic!("expected a name = value style syntax, e.g. #[orbital_period = 1.0]")
+    };
     
     // The generated impl for Planet using the orbital_period from the derive helper attribute
     let expanded = quote! {
