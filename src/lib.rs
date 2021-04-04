@@ -26,7 +26,7 @@ pub fn derive_planet(input: TokenStream) -> TokenStream {
     
     // The generated impl for Planet using the orbital_period from the derive helper attribute
     let expanded = quote! {
-        impl crate::Planet for #name {
+        impl space_age_core::Planet for #name {
             const ORBITAL_PERIOD: f64 = #orbital_period;
         }
     };
