@@ -1,6 +1,6 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, LitFloat, ItemStruct, DeriveInput};
+use syn::{parse_macro_input, LitFloat, DeriveInput};
 
 #[proc_macro_derive(Planet, attributes(orbital_period))]
 pub fn derive_planet(input: TokenStream) -> TokenStream {
@@ -9,7 +9,7 @@ pub fn derive_planet(input: TokenStream) -> TokenStream {
     let name = &input.ident;
 
     // Find the orbital_period helper attribute! (it is required!)
-    let attr = input.attrs.iter().filter(|attr| attr.path.is_ident("orbital_period")).next().unwrap();
+    let attr = input.attrs.iter().find(|attr| attr.path.is_ident("orbital_period")).unwrap();
 
     // Parse the argument to the attribute as a float
     // let orbital_period: LitFloat = attr.parse_args().unwrap();
